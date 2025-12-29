@@ -3,8 +3,7 @@ import io from 'socket.io-client';
 import { motion, AnimatePresence } from 'framer-motion';
 import './App.css';
 
-// 1. MUKHYAM: Meeru Render lo copy chesina URL ni ikkada pettandi
-const RENDER_URL = "https://food-backend-7h2y.onrender.com"; // Mee original URL pettandi
+const RENDER_URL = "https://food-backend-7h2y.onrender.com";
 const socket = io.connect(RENDER_URL);
 
 const steps = [
@@ -15,18 +14,18 @@ const steps = [
 ];
 
 function App() {
-  const [isOrdered, setIsOrdered] = useState(false); // New state added
+  const [isOrdered, setIsOrdered] = useState(false);
   const [currentStatus, setCurrentStatus] = useState("Order Placed");
   const [stageTimes, setStageTimes] = useState({});
   
   const queryParams = new URLSearchParams(window.location.search);
   const role = queryParams.get('role');
-  const isAdmin = role !== 'user'; 
+  const isAdmin = role === 'admin'; // 'admin' query unte admin view vasthundi
 
   const orderId = "123";
 
   useEffect(() => {
-    // Localhost badulu Render URL use chestunnam
+    // 1. Initial Data Fetch
     fetch(`${RENDER_URL}/order/${orderId}`)
       .then(res => res.json())
       .then(data => {
@@ -38,10 +37,11 @@ function App() {
       })
       .catch(err => console.error("Fetch error:", err));
 
+    // 2. Real-time Listener
     socket.on("receive_status", (data) => {
       setIsOrdered(data.isOrdered);
       setCurrentStatus(data.newStatus);
-      setStageTimes(data.stageTimes);
+      setStageTimes(data.stageTimes || {});
     });
 
     return () => socket.off("receive_status");
@@ -73,14 +73,13 @@ function App() {
               animate={{ 
                 backgroundColor: isActive ? "#4CAF50" : "#ccc",
                 scale: isCurrent ? 1.15 : 1,
-                boxShadow: isCurrent ? "0px 0px 15px rgba(76, 175, 80, 0.4)" : "none"
               }}
               className="icon-circle"
             >
               {step.icon}
             </motion.div>
             <p className={`label ${isActive ? "active" : ""}`}>{step.label}</p>
-            <span className={`stage-time ${stageTimes[step.label] ? "has-time" : ""}`}>
+            <span className="stage-time">
               {stageTimes[step.label] || "--:--"}
             </span>
 
@@ -89,7 +88,6 @@ function App() {
                 <motion.div 
                   className="progress-fill" 
                   animate={{ width: index < currentIndex ? "100%" : "0%" }} 
-                  transition={{ duration: 0.6 }}
                 />
               </div>
             )}
@@ -107,24 +105,19 @@ function App() {
 
       <AnimatePresence mode="wait">
         {!isAdmin ? (
-          // USER VIEW
           !isOrdered ? (
-            <motion.div 
-              key="btn" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="order-btn-wrapper"
-            >
+            <motion.div key="btn" className="order-btn-wrapper">
               <h2>Pawan's Kitchen 🍕</h2>
               <button className="order-main-btn" onClick={handlePlaceOrder}>
                 Place My Order Now
               </button>
             </motion.div>
           ) : (
-            <motion.div key="tracker" initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }}>
+            <motion.div key="tracker" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               {renderTracker()}
             </motion.div>
           )
         ) : (
-          // ADMIN VIEW
           <div className="admin-view">
              {renderTracker()}
              <div className="admin-section">
@@ -133,15 +126,13 @@ function App() {
                   {steps.map(step => (
                     <button 
                       key={step.label} 
-                      className={currentStatus === step.label ? "btn-active" : "btn-default"}
+                      className={currentStatus === step.label ? "btn-active" : ""}
                       onClick={() => handleUpdate(step.label)}
                     >
                       {step.label}
                     </button>
                   ))}
-                  <button className="btn-reset" onClick={handleReset}>
-                    🔄 Reset Order
-                  </button>
+                  <button className="btn-reset" onClick={handleReset}>🔄 Reset</button>
                 </div>
              </div>
           </div>
