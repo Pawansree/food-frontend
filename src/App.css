@@ -1,0 +1,26 @@
+.app-container { background: #f4f7f6; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px; font-family: 'Segoe UI', sans-serif; }
+.title { color: #2c3e50; font-weight: 800; margin-bottom: 30px; }
+
+/* Order Button */
+.order-btn-wrapper { background: white; padding: 60px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; margin-top: 50px; }
+.order-main-btn { background: #ff4757; color: white; padding: 18px 45px; font-size: 22px; border: none; border-radius: 50px; cursor: pointer; font-weight: 800; transition: 0.3s; margin-top: 20px; }
+.order-main-btn:hover { background: #ff6b81; transform: scale(1.05); }
+
+/* Tracking UI */
+.confirmation-badge { background: #e8f5e9; color: #2e7d32; padding: 10px 20px; border-radius: 50px; font-weight: bold; margin-bottom: 25px; text-align: center; }
+.tracker-card { background: white; padding: 60px 20px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); display: flex; justify-content: space-between; width: 95%; max-width: 1000px; }
+.step-item { position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; }
+.icon-circle { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; z-index: 2; }
+.connector-line { position: absolute; top: 30px; left: 50%; width: 100%; height: 6px; background: #eee; z-index: 1; }
+.progress-fill { height: 100%; background: #4CAF50; transition: width 0.8s ease; }
+.label { margin-top: 15px; font-weight: 700; color: #999; font-size: 14px; }
+.label.active { color: #333; }
+.stage-time { margin-top: 8px; font-size: 10px; color: #666; background: #f0f0f0; padding: 5px 10px; border-radius: 8px; font-weight: bold; min-width: 110px; text-align: center; }
+
+/* Admin Controls */
+.admin-section { margin-top: 50px; width: 100%; max-width: 1000px; text-align: center; }
+.btn-group { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 20px; }
+.btn-group button { padding: 12px 25px; border-radius: 30px; cursor: pointer; font-weight: 700; border: 2px solid #333; transition: 0.3s; }
+.btn-active { background: #4CAF50 !important; color: white; border-color: #4CAF50 !important; }
+.btn-default { background: transparent; }
+.btn-reset { background: #333 !important; color: white !important; }
